@@ -13,6 +13,6 @@ namespace GraniteWarehouse.Data
             : base(options)
         {
         }
-        DbSet<ProductTypes> ProductTypes { get; set; }
+        public DbSet<ProductTypes> ProductTypes { get; set; }
     }
 }
