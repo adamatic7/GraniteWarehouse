@@ -17,6 +17,6 @@ namespace GraniteWarehouse.Data
         public DbSet<SpecialTags> SpecialTags { get; set; }
 
         public DbSet<Products> Products { get; set; }
-
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
     }
 }
