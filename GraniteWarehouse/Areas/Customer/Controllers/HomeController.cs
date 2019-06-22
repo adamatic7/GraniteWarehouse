@@ -5,22 +5,52 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GraniteWarehouse.Models;
+using GraniteWarehouse.Data;
+using Microsoft.EntityFrameworkCore;
+using GraniteWarehouse.Extensions;
 
 namespace GraniteWarehouse.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _db;
+        
+        public HomeController(ApplicationDbContext db)
         {
-            return View();
+            _db = db;
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var productList = await _db.Products.Include(m => m.ProductTypes)
+                                                    .Include(m => m.SpecialTags)
+                                                    .ToListAsync();
+            return View(productList);
         }
 
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await _db.Products.Include(m => m.ProductTypes)
+                                                    .Include(m => m.SpecialTags)
+                                                    .Where(m => m.Id == id)
+                                                    .FirstOrDefaultAsync();
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Details")]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> DetailsPost(int id)
+        {
+            List<int> lstShoppingCart = HttpContext.Session.Get<List<int>>("ssShoppingCart");
+            if (lstShoppingCart == null)
+            {
+                lstShoppingCart = new List<int>();
+            }
+            lstShoppingCart.Add(id);
+            HttpContext.Session.Set("ssShoppingCart", lstShoppingCart);
+            return RedirectToAction("Index", "Home", new { area = "Customer" });
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
