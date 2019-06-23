@@ -10,10 +10,12 @@ using GraniteWarehouse.Utility;
 using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraniteWarehouse.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.SuperAdminEndUser)]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _db;

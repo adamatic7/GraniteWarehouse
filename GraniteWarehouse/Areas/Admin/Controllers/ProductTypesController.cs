@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using GraniteWarehouse.Data;
 using GraniteWarehouse.Models;
 using Microsoft.AspNetCore.Mvc;
+using GraniteWarehouse.Utility;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GraniteWarehouse.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.SuperAdminEndUser)]
     public class ProductTypesController : Controller
     {
         public readonly ApplicationDbContext _db;
